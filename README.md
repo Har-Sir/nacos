@@ -16,7 +16,7 @@
 >
 > mvn -Dmaven.test.skip=true -Prelease-nacos clean install -U
 >
->
+> 在linux上如果脚本报错，需要调整脚本格式vi startup.sh  :set ff=unix  然后在:wq
 
 
 
