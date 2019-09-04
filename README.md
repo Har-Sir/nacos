@@ -8,6 +8,20 @@
 
 -------
 
+> 切换到最新的tag：
+>
+> git checkout 1.1.3
+>
+> 打包：
+>
+> mvn -Dmaven.test.skip=true -Prelease-nacos clean install -U
+>
+>
+
+
+
+
+
 ## What does it do
 
 Nacos (official site: [http://nacos.io](http://nacos.io)) is an easy-to-use platform designed for dynamic service discovery and configuration and service management. It helps you to build cloud native applications and microservices platform easily.
@@ -17,7 +31,7 @@ Service is a first-class citizen in Nacos. Nacos supports almost all type of ser
 Nacos provides four major functions.
 
 * **Service Discovery and Service Health Check** 
-    
+  
     Nacos makes it simple for services to register themselves and to discover other services via a DNS or HTTP interface. Nacos also provides real-time healthchecks of services to prevent sending requests to unhealthy hosts or service instance.
 
 * **Dynamic Configuration Management**
@@ -31,7 +45,7 @@ Nacos provides four major functions.
 * **Service and MetaData Management**
 	
 	Nacos provides an easy-to-use service dashboard to help you manage your services metadata, configuration, kubernetes DNS, service health and metrics statistics.
- 
+
 
 ## Quick Start
 It is super easy to get started with your first project.
@@ -44,7 +58,7 @@ Take release nacos-server-1.0.0.zip for example.
 ```
 unzip nacos-server-1.0.0.zip
 cd nacos/bin 
-``` 
+```
 
 #### Step 2: Start Server
 
