@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 /**
- * A consistency protocol algorithm called <b>Partition</b>
+ * A consistency protocol algorithm called <b>Distro</b>
  * <p>
  * Use a distro algorithm to divide data into many blocks. Each Nacos server node takes
  * responsibility for exactly one block of data. Each block of data is generated, removed
@@ -99,6 +99,8 @@ public class DistroConsistencyServiceImpl implements EphemeralConsistencyService
 
     public volatile Notifier notifier = new Notifier();
 
+    private LoadDataTask loadDataTask = new LoadDataTask();
+
     private Map<String, CopyOnWriteArrayList<RecordListener>> listeners = new ConcurrentHashMap<>();
 
     private Map<String, String> syncChecksumTasks = new ConcurrentHashMap<>(16);
@@ -117,6 +119,22 @@ public class DistroConsistencyServiceImpl implements EphemeralConsistencyService
         });
 
         executor.submit(notifier);
+        GlobalExecutor.submit(loadDataTask);
+    }
+
+    private class LoadDataTask implements Runnable {
+
+        @Override
+        public void run() {
+            try {
+                load();
+                if (!initialized) {
+                    GlobalExecutor.submit(this, globalConfig.getLoadDataRetryDelayMillis());
+                }
+            } catch (Exception e) {
+                Loggers.DISTRO.error("load data failed.", e);
+            }
+        }
     }
 
     public void load() throws Exception {
@@ -211,6 +229,7 @@ public class DistroConsistencyServiceImpl implements EphemeralConsistencyService
                     // abort the procedure:
                     return;
                 }
+
                 if (!dataStore.contains(entry.getKey()) ||
                     dataStore.get(entry.getKey()).value == null ||
                     !dataStore.get(entry.getKey()).value.getChecksum().equals(entry.getValue())) {
